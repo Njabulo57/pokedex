@@ -139,6 +139,7 @@ main{
     position: relative;
 
 }
+
 .front::before, .back::before{
     content: '';
     background-image: url('assets/Group\(4\).png');

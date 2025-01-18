@@ -36,7 +36,15 @@ async function fetchAllPokemonData() {
 
             
             localStorage.setItem('allPokemon', JSON.stringify(allPokemon));
-            offset += (limit-1); 
+            // if (offset === 1) {
+            //     console.log(offset);
+            //     offset+= limit;
+            // }else{
+            //     offset += (limit+1); 
+            //     console.log(offset);
+            // }
+            offset += limit;
+            console.log(offset);
         }
     } catch (error) {
         console.error(error);
@@ -87,7 +95,7 @@ const fetchEachPokemonData = async (pokemonArr) => {
             });
         }
         //grid.innerHTML = '';
-        if(offset === 20){
+        if(offset === 0){
             allPokemon = allPokemon.concat(compactData);
             allPokemon.forEach(createPokemonCard);
             console.log("first condition ran");
@@ -203,6 +211,7 @@ function handleSearch() {
         hideNotFound();
         grid.style.display = 'flex';
     } else {
+
         grid.style.display = 'none';
         showNotFound();
     }
