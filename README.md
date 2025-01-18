@@ -38,4 +38,6 @@
 -
 1.Reduce reliance on local storage for caching large datasets
 
+2.Include more gripping animation and a details webpage for each pokemon
+
 
