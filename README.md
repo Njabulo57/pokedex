@@ -11,18 +11,23 @@
 
 
 
-##Asumptions Made
--Users have a modern web browser
--Internet access is available to load external assets
+-##Asumptions Made
+-
+1.Users have a modern web browser
+2.Internet access is available to load external assets
 
 
-##Known Limitations
--Caching in local storage may exceed limits for datasets
--No auto correct for Pokemon searches
--Limited number of cards stored at a time
+-##Known Limitations
+-
+1.Caching in local storage may exceed limits for datasets
+2.No auto correct for Pokemon searches
+3.Limited number of cards stored at a time
+4.Lag in name filter action
+5.Hover state animations don't work well on mobile
 
 
-##Future Improvements
--Reduce reliance on local storage for caching large datasets
+-##Future Improvements
+-
+1.Reduce reliance on local storage for caching large datasets
 
 
