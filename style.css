@@ -54,6 +54,23 @@ body{
     color: #d1d1d1;
 }
 
+.scroll-up{
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    padding: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: white;
+    display: none;
+}
+
+.scroll-up > img{
+    width: 1.3rem;
+}
+
 
 /* header */
 

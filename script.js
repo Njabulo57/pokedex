@@ -368,6 +368,27 @@ function hideNotFound() {
     notFound.style.display = 'none';
 }
 
+//scroll to top
+const scrollUp = document.querySelector(".scroll-up");
+
+scrollUp.addEventListener("click",topFunction)
+
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+    scrollUp.style.display = "block";
+  } else {
+    scrollUp.style.display = "none";
+  }
+}
+
+
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0; 
+} 
+
 //fetch call
 fecthData();
 //localStorage.removeItem('allPokemon');
