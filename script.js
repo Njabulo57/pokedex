@@ -9,6 +9,8 @@ const loader = document.querySelector('.loader');
 const notFound = document.querySelector('.not-found-container');
 const nameFilter = document.querySelector('.filter');
 const searchBtn = document.querySelector('.search-btn');
+const clearBtn = document.querySelector('.close-btn');
+const defaultFilter = document.querySelector('.default');
 
 var typesArray = [];
 
@@ -224,9 +226,39 @@ function createPokemonCard(pokemon) {
 }
 
 //search method
-//searchInput.addEventListener("keyup", handleSearch);
+searchInput.addEventListener("keyup", ()=>{
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    if(searchTerm.length > 0){
+        clearBtn.style.display = 'block';
+        searchBtn.style.color = 'black';
+        searchBtn.style.borderColor = 'black';
+    }else{
+        clearBtn.style.display = 'none';
+        searchBtn.style.color = '#d1d1d1';
+        searchBtn.style.borderColor = '#d1d1d1';
+    }
+});
 
-searchBtn.addEventListener("click", handleSearch)
+
+clearBtn.addEventListener('click', ()=>{
+    searchInput.value = '';
+    searchInput.blur();
+    grid.style.display = 'flex';
+    grid.innerHTML = '';
+    allPokemon.forEach(createPokemonCard);
+    clearBtn.style.display = 'none';
+    searchBtn.style.color = '#d1d1d1';
+    searchBtn.style.borderColor = '#d1d1d1';
+})
+
+
+
+searchBtn.addEventListener("click", ()=>{
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    if(searchTerm.length > 0){
+        handleSearch();
+    }
+})
 
 async function handleSearch() {
     const searchTerm = searchInput.value.trim().toLowerCase();
@@ -271,6 +303,23 @@ async function handleSearch() {
     }
 }
 
+//default filter
+defaultFilter.addEventListener("click", ()=>{
+    if( defaultFilter.style.backgroundColor === 'black'){
+        defaultFilter.style.backgroundColor = 'white';
+        defaultFilter.style.color = 'black';
+    } else{
+        defaultFilter.style.backgroundColor = 'black';
+        defaultFilter.style.color = 'white';
+        if(nameFilter.style.backgroundColor === 'black'){
+            nameFilter.style.backgroundColor = 'white';
+            nameFilter.style.color = 'black';
+        }
+        grid.innerHTML = '';
+        allPokemon.forEach(createPokemonCard);
+    }
+    
+})
 
 
 // name filter
@@ -285,13 +334,17 @@ nameFilter.addEventListener("click", ()=>{
         sortByName();
         nameFilter.style.backgroundColor = 'black';
         nameFilter.style.color = 'white';
+        if(defaultFilter.style.backgroundColor === 'black'){
+            defaultFilter.style.backgroundColor = 'white';
+            defaultFilter.style.color = 'black';
+        }
     }
     
 })
 
 function sortByName() {
     let sortedPokemon = [...allPokemon];
-    sortedPokemon.sort((a, b) => a.name.localeCompare(b.name));
+    sortedPokemon.sort((a, b) => (a.name > b.name ? 1 : -1));
     grid.innerHTML = '';
     sortedPokemon.forEach(createPokemonCard);
 }
