@@ -1,6 +1,19 @@
 //pokemon array
 let allPokemon = [];
 
+
+//HTML elements
+const grid = document.getElementById('poke-grid');
+const searchInput = document.getElementById('pk-search');
+const loader = document.querySelector('.loader');
+const notFound = document.querySelector('.not-found-container');
+const nameFilter = document.querySelector('.filter');
+const searchBtn = document.querySelector('.search-btn');
+
+var typesArray = [];
+
+
+
 function fecthData(){
     showLoader();
     fetchAllPokemonData();
@@ -18,11 +31,43 @@ async function fetchAllPokemonData() {
         const cachedData = localStorage.getItem('allPokemon');
         
         
-        if (cachedData && offset === 0) {
+        if (cachedData && offset === 0 && !(window.innerHeight + window.scrollY >= document.body.offsetHeight - 100)) {
             console.log('Using cached data');
             allPokemon = JSON.parse(cachedData);
+
+            offset += allPokemon.length;
+
+            console.log('Fetching data from API');
+            const response = await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
+
+            if (!response.ok) {
+                throw new Error("Could not fetch resources");
+            }
+
+            const data = await response.json();
+
+            const compactData = [];
+
+            for (const element of data.results) {
+                const responseSingle = await fetchSinglePokemonData(element.name);
+                if (!responseSingle) {
+                    throw new Error("Could not fetch resource for " + element.name);
+                }
+                compactData.push({
+                    id: responseSingle.id,
+                    name: responseSingle.name,
+                    types: responseSingle.types,
+                    stats: responseSingle.stats
+                });
+            }
+
+            allPokemon = allPokemon.concat(compactData);
             allPokemon.forEach(createPokemonCard);
-            offset++;
+            
+            
+            localStorage.setItem('allPokemon', JSON.stringify(allPokemon));
+
+            offset += limit;
         } else {
             console.log('Fetching data from API');
             const response = await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
@@ -36,13 +81,7 @@ async function fetchAllPokemonData() {
 
             
             localStorage.setItem('allPokemon', JSON.stringify(allPokemon));
-            // if (offset === 1) {
-            //     console.log(offset);
-            //     offset+= limit;
-            // }else{
-            //     offset += (limit+1); 
-            //     console.log(offset);
-            // }
+
             offset += limit;
             console.log(offset);
         }
@@ -109,14 +148,7 @@ const fetchEachPokemonData = async (pokemonArr) => {
     }
 };
 
-//HTML elements
-const grid = document.getElementById('poke-grid');
-const searchInput = document.getElementById('pk-search');
-const loader = document.querySelector('.loader');
-const notFound = document.querySelector('.not-found-container');
-const nameFilter = document.querySelector('.filter');
 
-var typesArray = [];
 
 
 
@@ -192,9 +224,11 @@ function createPokemonCard(pokemon) {
 }
 
 //search method
-searchInput.addEventListener("keyup", handleSearch);
+//searchInput.addEventListener("keyup", handleSearch);
 
-function handleSearch() {
+searchBtn.addEventListener("click", handleSearch)
+
+async function handleSearch() {
     const searchTerm = searchInput.value.trim().toLowerCase();
     
 
@@ -211,9 +245,29 @@ function handleSearch() {
         hideNotFound();
         grid.style.display = 'flex';
     } else {
+        try {
+            console.log(`Searching for ${searchTerm} in API...`);
+            const response = await fetchSinglePokemonData(searchTerm);
 
-        grid.style.display = 'none';
-        showNotFound();
+            if (!response) {
+                throw new Error('Pokemon not found');
+            }
+
+            const compactPokemon = {
+                id: response.id,
+                name: response.name,
+                types: response.types,
+                stats: response.stats 
+            };
+
+            createPokemonCard(compactPokemon);
+            grid.style.display = 'flex';
+        } catch (error) {
+            console.error(error);
+            grid.style.display = 'none';
+            showNotFound();
+        }
+        
     }
 }
 
@@ -221,14 +275,16 @@ function handleSearch() {
 
 // name filter
 nameFilter.addEventListener("click", ()=>{
-    if(nameFilter.style.borderColor === 'black'){
+    if(nameFilter.style.backgroundColor === 'black'){
         grid.innerHTML = '';
-        nameFilter.style.borderColor = 'white';
+        nameFilter.style.backgroundColor = 'white';
+        nameFilter.style.color = 'black';
         allPokemon.forEach(createPokemonCard);
         //console.log(allPokemon);
     } else{
         sortByName();
-        nameFilter.style.borderColor = 'black';
+        nameFilter.style.backgroundColor = 'black';
+        nameFilter.style.color = 'white';
     }
     
 })
@@ -264,6 +320,6 @@ fecthData();
 //localStorage.removeItem('allPokemon');
 
 
-const clearCache = document.querySelector('.clear-cache');
+// const clearCache = document.querySelector('.clear-cache');
 
-clearCache.addEventListener("click", ()=>localStorage.removeItem('allPokemon'));
+// clearCache.addEventListener("click", ()=>localStorage.removeItem('allPokemon'));

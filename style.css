@@ -107,21 +107,31 @@ main{
     width: 100%;
 }
 
-.filter{
+.btn-container{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.filter, .search-btn{
     font-weight: 400;
-    display: inline-block;
     padding: .5rem;
     font-size: 1rem;
-    background-color: transparent;
-    border: 1px solid white;
+    background-color: white;
+    border: 1px solid black;
     border-radius: .5rem;
     transition: border-color 200ms ease-in-out;
     color: black;
     cursor: pointer;
 }
 
-.filter:hover, .filter:active{
-    border-color: black;
+.search-btn{
+    margin-right: auto;
+}
+
+.search-btn:hover{
+    color: white;
+    background-color: black;
 }
 
 #poke-grid{
